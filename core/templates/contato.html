@@ -1,10 +1,31 @@
+{% load bootstrap4 %} <!-- Importando a bliblioteca bootstrap -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Contato</title>
+    {% bootstrap_css%} <!-- Carregando o css na tag head -->
 </head>
 <body>
-    <h1>Contato</h1>
+    <div class="container">
+
+        <h1>Contato</h1>
+        {% bootstrap_messages %} <!-- Exemplo: Mensagem de validação para campos de formulários. Caso o formulário seja
+enviado com sucesso aparece uma mensagem ou se houver alguma falha aparece outra mensagem -->
+
+        <form action="{% url 'contato' %}" method="post" class="form" autocomplete="off">
+            <!-- action chamará a url cujo nome é contato que serátratado na view-->
+            {% csrf_token %} <!-- Recurso de segurança: Usado para validar o formulário com os dados passados para ter
+certeza que não houve alterações dos dados no meio da caminho -->
+
+            {% bootstrap_form form %} <!-- Aplicando o css no meu objeto form (vindo da view) -->
+            {% buttons %}
+                <button type="submit" class="btn btn-primary">Enviar Mensagem</button>
+            {% endbuttons %}
+        </form>
+
+    </div>
+
+{% bootstrap_javascript jquery='full' %} <!-- Carregando o javascript e jquery -->
 </body>
 </html>
