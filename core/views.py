@@ -13,19 +13,9 @@ def contato(request):
     # ou quando carrega a página)
 
     if str(request.method) == 'POST':
-        print(f'Posta: {request.POST}')
         if form.is_valid():
-            # Se o formulário for válido as variáveis pegam o valor (form name)
-            nome = form.cleaned_data['nome']
-            email = form.cleaned_data['email']
-            assunto = form.cleaned_data['assunto']
-            mensagem = form.cleaned_data['mensagem']
-
-            print('Mensagem enviada!')
-            print(f'Nome: {nome}')
-            print(f'E-mail: {email}')
-            print(f'Assunto: {assunto}')
-            print(f'Mensagem: {mensagem}')
+            # Se o formulário for valido. envie o e-mail.
+            form.send_mail()
 
             messages.success(request, 'E-mail enviado com sucesso!')  # Mensagem de sucesso!
             form = ContatoForm()
