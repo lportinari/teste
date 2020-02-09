@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages  # Adiciona mensagens no contexto da página
 
-from .forms import ContatoForm
+from .forms import ContatoForm, ProdutoModelForm
 
 
 def index(request):
@@ -29,4 +29,26 @@ def contato(request):
 
 
 def produto(request):
-    return render(request, 'produto.html')
+    if str(request.method) == 'POST':
+        form = ProdutoModelForm(request.POST, request.FILES)  # Request.files por que tem upload de arquivo
+        if form.is_valid():
+            prod = form.save(commit=False)
+
+            print(f'Nome: {prod.nome}')
+            print(f'Preço: {prod.preco}')
+            print(f'Estoque: {prod.estoque}')
+            print(f'Imagem: {prod.imagem}')
+
+            messages.success(request, 'Produto salvo com sucesso!')
+            # limpar o formulário após submetido
+            form = ProdutoModelForm()
+
+        else:
+            messages.error(request, 'Erro ao cadastro produto!')
+    else:
+        form = ProdutoModelForm()
+
+    context = {
+        'form': form
+    }
+    return render(request, 'produto.html', context)
