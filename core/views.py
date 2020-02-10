@@ -32,12 +32,7 @@ def produto(request):
     if str(request.method) == 'POST':
         form = ProdutoModelForm(request.POST, request.FILES)  # Request.files por que tem upload de arquivo
         if form.is_valid():
-            prod = form.save(commit=False)
-
-            print(f'Nome: {prod.nome}')
-            print(f'Preço: {prod.preco}')
-            print(f'Estoque: {prod.estoque}')
-            print(f'Imagem: {prod.imagem}')
+            form.save()
 
             messages.success(request, 'Produto salvo com sucesso!')
             # limpar o formulário após submetido
