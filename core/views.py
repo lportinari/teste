@@ -1,11 +1,16 @@
 from django.shortcuts import render
 from django.contrib import messages  # Adiciona mensagens no contexto da página
+from django.shortcuts import redirect
 
 from .forms import ContatoForm, ProdutoModelForm
+from .models import Produto
 
 
 def index(request):
-    return render(request, 'index.html')
+    context = {
+        'produtos': Produto.objects.all()
+    }
+    return render(request, 'index.html', context)
 
 
 def contato(request):
@@ -29,21 +34,25 @@ def contato(request):
 
 
 def produto(request):
-    if str(request.method) == 'POST':
-        form = ProdutoModelForm(request.POST, request.FILES)  # Request.files por que tem upload de arquivo
-        if form.is_valid():
-            form.save()
+    if str(request.user) != 'AnonymousUser':
+        if str(request.method) == 'POST':
+            form = ProdutoModelForm(request.POST, request.FILES)  # Request.files por que tem upload de arquivo
+            if form.is_valid():
+                form.save()
 
-            messages.success(request, 'Produto salvo com sucesso!')
-            # limpar o formulário após submetido
+                messages.success(request, 'Produto salvo com sucesso!')
+                # limpar o formulário após submetido
+                form = ProdutoModelForm()
+
+            else:
+                messages.error(request, 'Erro ao cadastro produto!')
+        else:
             form = ProdutoModelForm()
 
-        else:
-            messages.error(request, 'Erro ao cadastro produto!')
-    else:
-        form = ProdutoModelForm()
+        context = {
+            'form': form
+        }
+        return render(request, 'produto.html', context)
 
-    context = {
-        'form': form
-    }
-    return render(request, 'produto.html', context)
+    else:
+        return redirect('index')
