@@ -1,0 +1,1 @@
+web: gunicorn dango2.wsgi --log-file -
